@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    stages {
+        stage('1990192n-Stage1') {
+            steps {
+                echo '1990192n-Stage 1: Setup Release Environment Completed.'
+            }
+        }
+        stage('1990192n-Stage2') {
+            steps {
+                script {
+                    // Remove any existing container
+                    sh 'docker rm -f 1990192n-Server || true'
+                    // Create a new container from the image
+                    sh 'docker run -dit --name 1990192n-Server -p 32500:80 1990192n-image'
+                    echo '1990192n-Stage 2: Server Setup Completed'
+                }
+            }
+        }
+        stage('1990192n-Stage3 Parallel') {
+            parallel {
+                stage('1990192n-Stage3A') {
+                    steps {
+                        echo '1990192n-Stage 3A: SQL Injection (SQLI) Test Completed'
+                    }
+                }
+                stage('1990192n-Stage3B') {
+                    steps {
+                        echo '1990192n-Stage 3B: X-Site Scripting (XSS) Test Completed'
+                    }
+                }
+            }
+        }
+        stage('1990192n-Stage4') {
+            steps {
+                script {
+                    def proceed = input message: "Hello 1990192n, permission to proceed to next phase?", parameters: [booleanParam(defaultValue: true, description: '', name: 'Proceed')]
+                    if (proceed) {
+                        echo '1990192n-Stage4: Approve to proceed to next phase'
+                    } else {
+                        error '1990192n-Stage4: Aborted'
+                    }
+                }
+            }
+        }
+        stage('1990192n-Stage5') {
+            steps {
+                echo '1990192n-Stage5: Ready for next phase'
+            }
+        }
+    }
+}
+
