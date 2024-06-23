@@ -18,7 +18,10 @@ pipeline {
             }
         }
         stage('1990192n-Stage3 Parallel') {
-            parallel {
+                    steps {
+                echo '1990192n-Stage 3 Parallel: Security Testing'
+            } 
+	    parallel {
                 stage('1990192n-Stage3A') {
                     steps {
                         echo '1990192n-Stage 3A: SQL Injection (SQLI) Test Completed'
